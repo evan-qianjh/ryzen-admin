@@ -4,7 +4,9 @@ import type { MenuRecordRaw } from '@vben-core/typings';
 
 import { acceptHMRUpdate, defineStore } from 'pinia';
 
+type TokenId = null | string;
 type AccessToken = null | string;
+type RefreshToken = null | string;
 
 interface AccessState {
   /**
@@ -43,6 +45,10 @@ interface AccessState {
    * 登录 accessToken
    */
   refreshToken: AccessToken;
+  /**
+   * Token ID
+   */
+  tokenId: TokenId;
 }
 
 /**
@@ -94,6 +100,17 @@ export const useAccessStore = defineStore('core-access', {
     setRefreshToken(token: AccessToken) {
       this.refreshToken = token;
     },
+    setTokenId(tokenId: TokenId) {
+        this.tokenId = tokenId;
+    },
+    setToken(tokenId: TokenId,
+             accessToken: AccessToken,
+             refreshToken: RefreshToken,
+    ) {
+      this.setTokenId(tokenId);
+      this.setAccessToken(accessToken);
+      this.setRefreshToken(refreshToken);
+    },
     unlockScreen() {
       this.isLockScreen = false;
       this.lockScreenPassword = undefined;
@@ -102,6 +119,7 @@ export const useAccessStore = defineStore('core-access', {
   persist: {
     // 持久化
     pick: [
+      'tokenId',
       'accessToken',
       'refreshToken',
       'accessCodes',
@@ -119,6 +137,7 @@ export const useAccessStore = defineStore('core-access', {
     lockScreenPassword: undefined,
     loginExpired: false,
     refreshToken: null,
+    tokenId: null,
   }),
 });
 

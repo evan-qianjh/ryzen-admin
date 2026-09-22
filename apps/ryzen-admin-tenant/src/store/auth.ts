@@ -8,10 +8,23 @@ import { preferences } from '@vben/preferences';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
 import { notification } from 'ant-design-vue';
+import JSEncrypt from 'jsencrypt';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import { getAccessCodesApi, getMessageEncryptorApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
+
+/**
+ * 加密密码
+ * @param password 密码
+ * @param publicKey  公钥
+ * @returns  密文
+ */
+const encryptPassword = (password: string, publicKey: string) => {
+  const encryptor = new JSEncrypt();
+  encryptor.setPublicKey(publicKey);
+  return encryptor.encrypt(password) || '加密失败';
+};
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -32,12 +45,21 @@ export const useAuthStore = defineStore('auth', () => {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
     try {
+
+      // 密码加密
+      const encryptor = await getMessageEncryptorApi();
+      params.password = encryptPassword(
+        params.password,
+        encryptor.publicKey,
+      );
+      params.keyId = encryptor.keyId;
+
       loginLoading.value = true;
-      const { accessToken } = await loginApi(params);
+      const { id, accessToken, refreshToken } = await loginApi(params);
 
       // 如果成功获取到 accessToken
       if (accessToken) {
-        accessStore.setAccessToken(accessToken);
+        accessStore.setToken(id, accessToken, refreshToken);
 
         // 获取用户信息并存储到 accessStore 中
         const [fetchUserInfoResult, accessCodes] = await Promise.all([
@@ -79,7 +101,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout(redirect: boolean = true) {
     try {
-      await logoutApi();
+      await logoutApi(accessStore.tokenId);
     } catch {
       // 不做任何处理
     }
