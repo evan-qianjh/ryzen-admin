@@ -36,7 +36,7 @@ export namespace AuthApi {
 
 export async function getMessageEncryptorApi() {
   return requestClient.get<AuthApi.getMessageEncryptorResp>(
-    '/admin/public/message-encryptor',
+    '/tenant/public/message-encryptor',
   );
 }
 
@@ -44,7 +44,7 @@ export async function getMessageEncryptorApi() {
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  return requestClient.post<AuthApi.LoginResult>('/admin/public/account-token', data);
+  return requestClient.post<AuthApi.LoginResult>('/tenant/public/account-token', data);
 }
 
 /**
@@ -52,7 +52,7 @@ export async function loginApi(data: AuthApi.LoginParams) {
  */
 export async function refreshTokenApi(data: AuthApi.RefreshTokenParams) {
   const resp = await baseRequestClient.post(
-    '/admin/public/access-token',
+    '/tenant/public/access-token',
     data,
     {withCredentials: true},
   );
@@ -63,7 +63,7 @@ export async function refreshTokenApi(data: AuthApi.RefreshTokenParams) {
  * 退出登录
  */
 export async function logoutApi(tokenId: null | string) {
-  return requestClient.delete(`/admin/account-token/${tokenId}`, {
+  return requestClient.delete(`/tenant/account-token/${tokenId}`, {
     withCredentials: true,
   });
 }
@@ -72,5 +72,5 @@ export async function logoutApi(tokenId: null | string) {
  * 获取用户权限码
  */
 export async function getPermissionsApi() {
-  return await requestClient.get<[]>('/admin/account-permissions') as AuthApi.PermissionsResult [];
+  return await requestClient.get<[]>('/tenant/account-permissions') as AuthApi.PermissionsResult [];
 }
