@@ -36,6 +36,11 @@ interface RouteMeta {
    */
   accessCodes? : string[];
   /**
+   * 需要特定的权限标识才可以访问
+   * @default []
+   */
+  permissions?: string[];
+  /**
    * 徽标
    */
   badge?: string;
