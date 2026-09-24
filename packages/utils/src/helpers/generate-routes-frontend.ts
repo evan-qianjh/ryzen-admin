@@ -8,11 +8,12 @@ import { filterTree, mapTree } from '@vben-core/shared/utils';
 async function generateRoutesByFrontend(
   routes: RouteRecordRaw[],
   roles: string[],
+  permissions: string[],
   forbiddenComponent?: RouteRecordRaw['component'],
 ): Promise<RouteRecordRaw[]> {
   // 根据角色标识过滤路由表,判断当前用户是否拥有指定权限
   const finalRoutes = filterTree(routes, (route) => {
-    return hasAuthority(route, roles);
+    return hasAuthority(route, roles) || hasPermission(route, permissions);
   });
 
   if (!forbiddenComponent) {
@@ -39,6 +40,21 @@ function hasAuthority(route: RouteRecordRaw, access: string[]) {
     return true;
   }
   const canAccess = access.some((value) => authority.includes(value));
+
+  return canAccess || (!canAccess && menuHasVisibleWithForbidden(route));
+}
+
+/**
+ * 判断路由是否有权限访问
+ * @param route
+ * @param access
+ */
+function hasPermission(route: RouteRecordRaw, access: string[]) {
+  const permissions = route.meta?.permissions;
+  if(!permissions) {
+    return true;
+  }
+  const canAccess = access.some((value) => permissions.includes(value));
 
   return canAccess || (!canAccess && menuHasVisibleWithForbidden(route));
 }

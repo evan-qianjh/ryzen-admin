@@ -29,6 +29,18 @@ interface BasicUserInfo {
    * 用户名
    */
   username: string;
+  /**
+   * ID
+   */
+  id: string;
+  /**
+   * 昵称
+   */
+  nickname: string;
+  /**
+   *
+   */
+  administrator: boolean;
 }
 
 type ClassType =

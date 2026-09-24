@@ -31,6 +31,11 @@ interface RouteMeta {
    */
   authority?: string[];
   /**
+   * 需要特定的权限表示才可以访问
+   * @default []
+   */
+  accessCodes? : string[];
+  /**
    * 徽标
    */
   badge?: string;
@@ -149,6 +154,7 @@ interface GenerateMenuAndRoutesOptions {
   layoutMap?: ComponentRecordType;
   pageMap?: ComponentRecordType;
   roles?: string[];
+  permissions?: string[];
   router: Router;
   routes: RouteRecordRaw[];
 }

@@ -54,7 +54,7 @@ describe('generateRoutesByFrontend', () => {
   it('should handle routes without children', async () => {
     const generatedRoutes = await generateRoutesByFrontend(mockRoutes, [
       'user',
-    ]);
+    ], []);
     expect(generatedRoutes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -65,7 +65,7 @@ describe('generateRoutesByFrontend', () => {
   });
 
   it('should handle empty roles array', async () => {
-    const generatedRoutes = await generateRoutesByFrontend(mockRoutes, []);
+    const generatedRoutes = await generateRoutesByFrontend(mockRoutes, [], []);
     expect(generatedRoutes).toEqual(
       expect.arrayContaining([
         // Only routes without authority should be included
@@ -94,7 +94,7 @@ describe('generateRoutesByFrontend', () => {
     ];
     const generatedRoutes = await generateRoutesByFrontend(
       routesWithMissingMeta as RouteRecordRaw[],
-      ['admin'],
+      ['admin'], []
     );
     expect(generatedRoutes).toEqual([
       { path: '/path1' },
@@ -118,8 +118,8 @@ describe('generateRoutesByFrontend', () => {
       },
     ] as unknown as RouteRecordRaw[];
 
-    await generateRoutesByFrontend(routes, ['user']);
-    const asAdmin = await generateRoutesByFrontend(routes, ['admin']);
+    await generateRoutesByFrontend(routes, ['user'], []);
+    const asAdmin = await generateRoutesByFrontend(routes, ['admin'], []);
 
     expect(asAdmin[0]?.children?.map((child) => child.path)).toEqual([
       '/dashboard/overview',

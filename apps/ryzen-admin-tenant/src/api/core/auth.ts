@@ -1,4 +1,4 @@
-import { baseRequestClient, requestClient } from '#/api/request';
+import {baseRequestClient, requestClient} from '#/api/request';
 
 export namespace AuthApi {
   export interface getMessageEncryptorResp {
@@ -26,6 +26,12 @@ export namespace AuthApi {
   export interface RefreshTokenResult {
     accessToken: string;
   }
+
+  export interface PermissionsResult {
+    id: string;
+    symbol: string;
+    title: string;
+  }
 }
 
 export async function getMessageEncryptorApi() {
@@ -48,7 +54,7 @@ export async function refreshTokenApi(data: AuthApi.RefreshTokenParams) {
   const resp = await baseRequestClient.post(
     '/admin/public/access-token',
     data,
-    { withCredentials: true },
+    {withCredentials: true},
   );
   return resp?.data.result as AuthApi.RefreshTokenResult;
 }
@@ -65,6 +71,6 @@ export async function logoutApi(tokenId: null | string) {
 /**
  * 获取用户权限码
  */
-export async function getAccessCodesApi() {
-  return requestClient.get<string[]>('/admin/account-permissions');
+export async function getPermissionsApi() {
+  return await requestClient.get<[]>('/admin/account-permissions') as AuthApi.PermissionsResult [];
 }

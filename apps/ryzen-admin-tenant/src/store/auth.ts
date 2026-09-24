@@ -11,7 +11,7 @@ import { notification } from 'ant-design-vue';
 import JSEncrypt from 'jsencrypt';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getMessageEncryptorApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import { getMessageEncryptorApi, getPermissionsApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
 
 /**
@@ -62,15 +62,15 @@ export const useAuthStore = defineStore('auth', () => {
         accessStore.setToken(id, accessToken, refreshToken);
 
         // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
+        const [fetchUserInfoResult, fetchAccessCodesResult] = await Promise.all([
           fetchUserInfo(),
-          getAccessCodesApi(),
+          fetchAccessCodes(),
         ]);
 
         userInfo = fetchUserInfoResult;
 
         userStore.setUserInfo(userInfo);
-        accessStore.setAccessCodes(accessCodes);
+        accessStore.setAccessCodes(fetchAccessCodesResult);
 
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
@@ -125,6 +125,13 @@ export const useAuthStore = defineStore('auth', () => {
     return userInfo;
   }
 
+  async function fetchAccessCodes() {
+    const permissions = await getPermissionsApi();
+    const accessCodes = permissions.map(item => item.symbol);
+    accessStore.setAccessCodes(accessCodes)
+    return accessCodes;
+  }
+
   function $reset() {
     loginLoading.value = false;
   }
@@ -133,6 +140,7 @@ export const useAuthStore = defineStore('auth', () => {
     $reset,
     authLogin,
     fetchUserInfo,
+    fetchAccessCodes,
     loginLoading,
     logout,
   };
