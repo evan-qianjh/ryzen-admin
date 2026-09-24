@@ -11,5 +11,9 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "system": {
+    "title": "系统",
+    "roles": "角色"
   }
 }
