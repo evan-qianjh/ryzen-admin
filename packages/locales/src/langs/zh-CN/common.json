@@ -23,5 +23,11 @@
   "showSearchPanel": "显示搜索面板",
   "hideSearchPanel": "隐藏搜索面板",
   "notShow": "不显示",
-  "more": "更多"
+  "more": "更多",
+  "id": "ID",
+  "name": "名称",
+  "symbol": "标识",
+  "createdTime": "创建时间",
+  "updatedTime": "更新时间",
+  "operation": "操作"
 }

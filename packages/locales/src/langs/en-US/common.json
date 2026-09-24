@@ -23,5 +23,11 @@
   "showSearchPanel": "Show search panel",
   "hideSearchPanel": "Hide search panel",
   "notShow": "Don't Show",
-  "more": "More"
+  "more": "More",
+  "id": "ID",
+  "name": "Name",
+  "symbol": "Symbol",
+  "createdTime": "Created Time",
+  "updatedTime": "Updated Time",
+  "operation": "Operation"
 }
