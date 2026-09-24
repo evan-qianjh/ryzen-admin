@@ -57,8 +57,7 @@ export async function refreshTokenApi(data: AuthApi.RefreshTokenParams) {
  * 退出登录
  */
 export async function logoutApi(tokenId: null | string) {
-  // TODO 是否应该用baseRequestClient
-  return baseRequestClient.delete(`/admin/account-token/${tokenId}`, {
+  return requestClient.delete(`/admin/account-token/${tokenId}`, {
     withCredentials: true,
   });
 }
