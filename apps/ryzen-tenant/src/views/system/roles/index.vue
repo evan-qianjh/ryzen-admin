@@ -55,15 +55,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
     columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
     keepSource: true,
+    // 关闭分页，接口返回什么就展示什么
+    pagerConfig: {
+      enabled: false,
+    },
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues: RoleSearchSubmitValues) => {
-          const result = await getRoles({
-            page: page.currentPage,
-            pageSize: page.pageSize,
-            ...formValues,
-          });
-          return { items: result };
+        query: async (_params, formValues: RoleSearchSubmitValues) => {
+          return await getRoles({ ...formValues });
         },
       },
     },

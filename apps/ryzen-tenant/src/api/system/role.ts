@@ -4,9 +4,12 @@ export namespace SystemRoleApi {
   //
   export interface GetRolesReq {
     // TODO delete
-    page?: number;
-    pageSize?: number;
+    // page?: number;
+    // pageSize?: number;
     enabled?: boolean;
+    endTime?: string;
+    startTime?: string;
+    title?: string;
   }
   export interface GetRolesRes {
     id: string;
