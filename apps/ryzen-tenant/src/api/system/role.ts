@@ -37,7 +37,7 @@ export namespace SystemRoleApi {
  * @param req
  */
 export async function getRoles(req: SystemRoleApi.GetRolesReq) {
-  return await requestClient.get<SystemRoleApi.GetRolesRes>(
+  return await requestClient.get<SystemRoleApi.GetRolesRes[]>(
     '/tenant/roles', {params: req}
   )
 }

@@ -21,6 +21,7 @@ import { createDateRangeCodec } from '#/utils/date-range-codec';
 
 import { useColumns, useGridFormSchema } from './data';
 import AddForm from './modules/add-form.vue';
+import EditForm from './modules/edit-form.vue';
 
 interface RoleSearchFormValues extends Record<string, unknown> {
   createTime?: [Dayjs, Dayjs];
@@ -43,6 +44,12 @@ const [AddFormDrawer, addFormDrawerApi] = useVbenDrawer({
   connectedComponent: AddForm,
   destroyOnClose: true,
 });
+
+/* 修改表单 */
+const [EditFormDrawer, editFormDrawerApi] = useVbenDrawer({
+  connectedComponent: EditForm,
+  destroyOnClose: true,
+})
 
 /* 表格 */
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -82,6 +89,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<SystemRoleApi.GetRolesRes>,
 });
 
+/* action点击 */
 function onActionClick(e: OnActionClickParams<SystemRoleApi.GetRolesRes>) {
   switch (e.code) {
     case 'delete': {
@@ -141,8 +149,8 @@ async function onStatusChange(
   }
 }
 
-function onEdit(row: SystemRoleApi.PatchRoleReq) {
-  addFormDrawerApi.setData(row).open();
+function onEdit(row: SystemRoleApi.GetRolesRes) {
+  editFormDrawerApi.setData(row).open();
 }
 
 function onDelete(row: SystemRoleApi.GetRolesRes) {
@@ -174,7 +182,12 @@ function onCreate() {
 </script>
 <template>
   <Page auto-content-height>
+
+    <!--  新增表单  -->
     <AddFormDrawer @success="onRefresh" />
+    <!--  编辑表单  -->
+    <EditFormDrawer @success="onRefresh" />
+    <!--  列表  -->
     <Grid :table-title="$t('system.role.list')">
       <template #toolbar-tools>
         <Button v-if="canAdd" type="primary" @click="onCreate">

@@ -7,7 +7,40 @@ import { useAccess } from '@vben/access';
 import { $t } from '#/locales';
 
 // 新增表单
-export function useFormSchema(): VbenFormSchema[] {
+export function useAddFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'Input',
+      fieldName: 'title',
+      label: $t('system.role.title'),
+      rules: 'required',
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        buttonStyle: 'solid',
+        options: [
+          { label: $t('common.enabled'), value: true },
+          { label: $t('common.disabled'), value: false },
+        ],
+        optionType: 'button',
+      },
+      defaultValue: true,
+      fieldName: 'enabled',
+      label: $t('common.enabled'),
+    },
+    {
+      component: 'Input',
+      fieldName: 'permissionIds',
+      formItemClass: 'items-start',
+      label: $t('system.role.setPermissions'),
+      modelPropName: 'modelValue',
+    },
+  ];
+}
+
+// 新增表单
+export function useEditFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',

@@ -13,17 +13,18 @@ import {Spin} from 'ant-design-vue';
 
 import {useVbenForm} from '#/adapter/form';
 import {getPermissions, type SystemPermissionApi} from '#/api';
-import {postRole} from '#/api/system/role';
+import {patchRole} from '#/api/system/role';
+import {getRolePermissions} from "#/api/system/role-permission";
 import {$t} from '#/locales';
 
-import {useAddFormSchema} from '../data';
+import {useEditFormSchema} from '../data';
 
 const emits = defineEmits(['success']);
 
-const formData = ref<SystemRoleApi.PostRoleReq>();
+const formData = ref<SystemRoleApi.PatchRoleReq>();
 
 const [Form, formApi] = useVbenForm({
-  schema: useAddFormSchema(),
+  schema: useEditFormSchema(),
   showDefaultActions: false,
 });
 
@@ -32,14 +33,14 @@ const loadingPermissions = ref(false);
 
 
 
-
-const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.PostRoleReq>({
+const id = ref();
+const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.GetRolesRes>({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
     const values = await formApi.getValues();
     drawerApi.lock();
-    postRole(values)
+    patchRole(id.value, values)
       .then(() => {
         emits('success');
         drawerApi.close();
@@ -56,8 +57,10 @@ const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.PostRoleReq>({
 
       if (data) {
         formData.value = data;
+        id.value = data.id;
       } else {
         formData.value = undefined;
+        id.value = undefined;
       }
 
       if (permissions.value.length === 0) {
@@ -113,18 +116,21 @@ function buildPermissionTree(
 async function loadPermissions() {
   loadingPermissions.value = true;
   try {
-    // const res = await getAllMenusApi();
     const res =  await getPermissions({enabled: true});
 
-    // permissions.value = res as unknown as DataNode[];
+    // 初始化权限
     permissions.value = buildPermissionTree(res);
+
+    // TODO 回显已分配权限
+    const rolePermissions = await getRolePermissions({roleId: id.value})
+
   } finally {
     loadingPermissions.value = false;
   }
 }
 
 const getDrawerTitle = computed(() => {
-  return $t('common.create', $t('system.role.title'));
+  return $t('common.edit', $t('system.role.title'));
 });
 
 function getNodeClass(node: Recordable<any>) {
