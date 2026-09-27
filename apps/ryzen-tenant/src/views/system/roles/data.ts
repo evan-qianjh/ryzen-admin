@@ -100,11 +100,16 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
       align: 'center',
       cellRender: {
         attrs: {
-          nameField: 'name',
+          nameField: 'title',
           nameTitle: $t('system.role.title'),
           onClick: onActionClick,
         },
         name: 'CellOperation',
+        // 按钮级细粒度控制：show 为 false（或函数返回 false）的按钮会被渲染器过滤掉
+        options: [
+          { code: 'edit', show: hasAccessByCodes(['/system/roles:edit']) },
+          { code: 'delete', show: hasAccessByCodes(['/system/roles:delete']) },
+        ],
       },
       field: 'operation',
       fixed: 'right',

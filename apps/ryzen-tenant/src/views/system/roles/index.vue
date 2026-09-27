@@ -8,6 +8,7 @@ import type {
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
 
+import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
@@ -21,7 +22,6 @@ import { createDateRangeCodec } from '#/utils/date-range-codec';
 import { useColumns, useGridFormSchema } from './data';
 import AddForm from './modules/add-form.vue';
 
-
 interface RoleSearchFormValues extends Record<string, unknown> {
   createTime?: [Dayjs, Dayjs];
 }
@@ -33,6 +33,10 @@ const roleSearchCodec = createDateRangeCodec<RoleSearchFormValues>()({
 });
 
 type RoleSearchSubmitValues = ReturnType<typeof roleSearchCodec.encode>;
+
+/* 按钮级权限：根据 accessCode 决定是否展示（symbol 来自后端 /permissions 接口） */
+const { hasAccessByCodes } = useAccess();
+const canAdd = hasAccessByCodes(['/system/roles:add']);
 
 /* 新增表单 */
 const [AddFormDrawer, addFormDrawerApi] = useVbenDrawer({
@@ -173,7 +177,7 @@ function onCreate() {
     <AddFormDrawer @success="onRefresh" />
     <Grid :table-title="$t('system.role.list')">
       <template #toolbar-tools>
-        <Button type="primary" @click="onCreate">
+        <Button v-if="canAdd" type="primary" @click="onCreate">
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create', [$t('system.role.title')]) }}
         </Button>
