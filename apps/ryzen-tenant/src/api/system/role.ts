@@ -27,6 +27,7 @@ export namespace SystemRoleApi {
 
   //
   export interface PatchRoleReq {
+    title?: string;
     enabled?: boolean;
   }
 }
@@ -61,3 +62,14 @@ export async function patchRole(id: string, req: SystemRoleApi.PatchRoleReq) {
     '/tenant/role/' + id, req
   )
 }
+
+/**
+ * 修改角色
+ * @param id
+ */
+export async function deleteRole(id: string) {
+  return await requestClient.delete(
+    '/tenant/role/' + id
+  )
+}
+

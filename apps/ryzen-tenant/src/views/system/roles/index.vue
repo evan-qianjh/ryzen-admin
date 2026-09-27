@@ -12,10 +12,10 @@ import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
-import { Button, Modal } from 'ant-design-vue';
+import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import {getRoles, patchRole, type SystemRoleApi} from '#/api';
+import { deleteRole, getRoles, patchRole, type SystemRoleApi} from '#/api';
 import { $t } from '#/locales';
 import { createDateRangeCodec } from '#/utils/date-range-codec';
 
@@ -84,10 +84,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
 function onActionClick(e: OnActionClickParams<SystemRoleApi.GetRolesRes>) {
   switch (e.code) {
-    // case 'delete': {
-    //   onDelete(e.row);
-    //   break;
-    // }
+    case 'delete': {
+      onDelete(e.row);
+      break;
+    }
     case 'edit': {
       onEdit(e.row);
       break;
@@ -145,24 +145,24 @@ function onEdit(row: SystemRoleApi.PatchRoleReq) {
   addFormDrawerApi.setData(row).open();
 }
 
-// function onDelete(row: SystemRoleApi.listRolesRes) {
-//   const hideLoading = message.loading({
-//     content: $t('ui.actionMessage.deleting', [row.name]),
-//     duration: 0,
-//     key: 'action_process_msg',
-//   });
-//   deleteRole(row.id)
-//     .then(() => {
-//       message.success({
-//         content: $t('ui.actionMessage.deleteSuccess', [row.name]),
-//         key: 'action_process_msg',
-//       });
-//       onRefresh();
-//     })
-//     .catch(() => {
-//       hideLoading();
-//     });
-// }
+function onDelete(row: SystemRoleApi.GetRolesRes) {
+  const hideLoading = message.loading({
+    content: $t('ui.actionMessage.deleting', [row.title]),
+    duration: 0,
+    key: 'action_process_msg',
+  });
+  deleteRole(row.id)
+    .then(() => {
+      message.success({
+        content: $t('ui.actionMessage.deleteSuccess', [row.title]),
+        key: 'action_process_msg',
+      });
+      onRefresh();
+    })
+    .catch(() => {
+      hideLoading();
+    });
+}
 
 function onRefresh() {
   gridApi.query();
