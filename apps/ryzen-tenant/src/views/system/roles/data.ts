@@ -20,14 +20,14 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         buttonStyle: 'solid',
         options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
+          { label: $t('common.enabled'), value: true },
+          { label: $t('common.disabled'), value: false },
         ],
         optionType: 'button',
       },
-      defaultValue: 1,
+      defaultValue: true,
       fieldName: 'enabled',
-      label: $t('system.role.status'),
+      label: $t('common.enabled'),
     },
     // {
     //   component: 'Input',
