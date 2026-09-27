@@ -40,9 +40,9 @@ setupVbenVxeTable({
         proxyConfig: {
           autoLoad: true,
           response: {
-            result: 'items',
+            result: 'records', // 分页场景
             total: 'total',
-            list: 'items',
+            list: 'records', // 不分页场景
           },
           showActiveMsg: true,
           showResponseMsg: false,
