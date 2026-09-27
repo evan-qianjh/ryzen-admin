@@ -60,7 +60,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
   ];
 }
 
-// 表格列
+// 表格内容
 export function useColumns<T = SystemRoleApi.GetRolesRes>(
   onActionClick: OnActionClickFn<T>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
@@ -80,13 +80,15 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
       cellRender: {
         attrs: { beforeChange: onStatusChange },
         name: onStatusChange ? 'CellSwitch' : 'CellTag',
+        // enabled 字段为 boolean 类型，覆盖渲染器默认的 1/0 选中值
+        props: { checkedValue: true, unCheckedValue: false },
       },
       field: 'enabled',
       title: $t('common.enabled'),
       width: 100,
     },
     {
-      field: 'createTime',
+      field: 'createdTime',
       title: $t('common.createdTime'),
       width: 200,
     },

@@ -15,10 +15,8 @@ import { Button, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {getRoles, patchRole, type SystemRoleApi} from '#/api';
-// import { deleteRole, getRoleList, updateRole } from '#/api';
 import { $t } from '#/locales';
 import { createDateRangeCodec } from '#/utils/date-range-codec';
-// import { createDateRangeCodec } from '#/utils/date-range-codec';
 
 import { useColumns, useGridFormSchema } from './data';
 import AddForm from './modules/add-form.vue';
@@ -55,7 +53,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     columns: useColumns(onActionClick, onStatusChange),
     height: 'auto',
     keepSource: true,
-    // 关闭分页，接口返回什么就展示什么
+    // 关闭分页
     pagerConfig: {
       enabled: false,
     },
@@ -124,12 +122,12 @@ async function onStatusChange(
   row: SystemRoleApi.GetRolesRes,
 ) {
   const status: Recordable<string> = {
-    0: '禁用',
-    1: '启用',
+    false: '禁用',
+    true: '启用',
   };
   try {
     await confirm(
-      `你要将${row.title}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
+      `你要将【${row.title}】的状态切换为 【${status[String(newStatus)]}】 吗？`,
       `切换状态`,
     );
     await patchRole(row.id, { enabled: newStatus });

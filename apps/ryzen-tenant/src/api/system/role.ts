@@ -15,6 +15,7 @@ export namespace SystemRoleApi {
     id: string;
     title: string;
     enabled: boolean;
+    createdTime: number
   }
 
   //
