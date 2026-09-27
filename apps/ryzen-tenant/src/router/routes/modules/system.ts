@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'lucide:area-chart',
           title: $t('page.system.roles'),
-          permissions: ['/system/roles'],
+          permissions: ['/system/roles:view'],
         },
       },
       // {

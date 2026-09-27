@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
           affixTab: true,
           icon: 'lucide:area-chart',
           title: $t('page.dashboard.analytics'),
-          permissions: ['/dashboard/analytics'],
+          permissions: ['/dashboard/analytics:view'],
         },
       },
       {
@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'carbon:workspace',
           title: $t('page.dashboard.workspace'),
-          permissions: ['/dashboard/workspace'],
+          permissions: ['/dashboard/workspace:view'],
         },
       },
     ],
