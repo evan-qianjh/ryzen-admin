@@ -78,7 +78,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'title',
-      label: $t('system.role.title'),
+      label: $t('common.name'),
     },
     {
       component: 'Select',

@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         path: 'roles',
         component: () => import('#/views/system/roles/index.vue'),
         meta: {
-          icon: 'lucide:area-chart',
+          icon: 'mdi:account-group',
           title: $t('page.system.roles'),
           permissions: ['/system/roles:view'],
         },
