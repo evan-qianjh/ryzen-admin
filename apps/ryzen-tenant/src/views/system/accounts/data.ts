@@ -48,9 +48,13 @@ export function useEditFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'title',
-      label: $t('system.account.title'),
-      rules: 'required',
+      fieldName: 'username',
+      label: $t('system.account.username'),
+    },
+    {
+      component: 'Input',
+      fieldName: 'nickname',
+      label: $t('system.account.nickname'),
     },
     {
       component: 'RadioGroup',
@@ -123,7 +127,10 @@ export function useColumns<T = SystemAccountApi.GetAccountsRes>(
     {
       cellRender: {
         attrs: { beforeChange: onStatusChange },
-        name: onStatusChange && hasAccessByCodes(['/system/accounts:enabled']) ? 'CellSwitch' : 'CellTag',
+        name:
+          onStatusChange && hasAccessByCodes(['/system/accounts:enabled'])
+            ? 'CellSwitch'
+            : 'CellTag',
         props: { checkedValue: true, unCheckedValue: false },
       },
       field: 'enabled',

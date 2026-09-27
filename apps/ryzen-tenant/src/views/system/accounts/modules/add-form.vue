@@ -1,19 +1,15 @@
 <script lang="ts" setup>
-import type {DataNode} from 'ant-design-vue/es/tree';
+import type { SystemAccountApi } from '#/api';
 
-import type {Recordable} from '@vben/types';
+import { nextTick, ref } from 'vue';
 
-import {computed, nextTick, ref} from 'vue';
+import { useVbenDrawer } from '@vben/common-ui';
 
-import {Tree, useVbenDrawer} from '@vben/common-ui';
+import { useVbenForm } from '#/adapter/form';
+import { postAccount } from '#/api';
+import { $t } from '#/locales';
 
-import {Spin} from 'ant-design-vue';
-
-import {useVbenForm} from '#/adapter/form';
-import {postAccount, type SystemAccountApi } from '#/api';
-import {$t} from '#/locales';
-
-import {useAddFormSchema} from '../data';
+import { useAddFormSchema } from '../data';
 
 const emits = defineEmits(['success']);
 
@@ -24,83 +20,48 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const permissions = ref<DataNode[]>([]);
-const loadingPermissions = ref(false);
+const [Drawer, drawerApi] =
+  useVbenDrawer<null | SystemAccountApi.PostAccountReq>({
+    async onConfirm() {
+      const { valid } = await formApi.validate();
+      if (!valid) return;
+      const values = await formApi.getValues();
+      drawerApi.lock();
+      postAccount(values)
+        .then(() => {
+          emits('success');
+          drawerApi.close();
+        })
+        .catch(() => {
+          drawerApi.unlock();
+        });
+    },
 
+    async onOpenChange(isOpen) {
+      if (isOpen) {
+        const data = drawerApi.getData();
+        formApi.reset();
 
+        if (data) {
+          formData.value = data;
+        } else {
+          formData.value = undefined;
+        }
 
-const [Drawer, drawerApi] = useVbenDrawer<null | SystemAccountApi.PostAccountReq>({
-  async onConfirm() {
-    const { valid } = await formApi.validate();
-    if (!valid) return;
-    const values = await formApi.getValues();
-    drawerApi.lock();
-    postAccount(values)
-      .then(() => {
-        emits('success');
-        drawerApi.close();
-      })
-      .catch(() => {
-        drawerApi.unlock();
-      });
-  },
-
-  async onOpenChange(isOpen) {
-    if (isOpen) {
-      const data = drawerApi.getData();
-      formApi.reset();
-
-      if (data) {
-        formData.value = data;
-      } else {
-        formData.value = undefined;
+        // Wait for Vue to flush DOM updates (form fields mounted)
+        await nextTick();
+        if (data) {
+          formApi.setValues(data);
+        }
       }
-
-      // Wait for Vue to flush DOM updates (form fields mounted)
-      await nextTick();
-      if (data) {
-        formApi.setValues(data);
-      }
-    }
-  },
-});
+    },
+  });
 
 defineExpose({ drawerApi });
-
-
-const getDrawerTitle = computed(() => {
-  return $t('common.create', $t('system.account.title'));
-});
-
-function getNodeClass(node: Recordable<any>) {
-  const classes: string[] = [];
-  if (node.value?.type === 'button') {
-    classes.push('inline-flex');
-  }
-
-  return classes.join(' ');
-}
 </script>
 <template>
-  <Drawer :title="getDrawerTitle">
-    <Form>
-      <template #permissionIds="slotProps">
-        <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">
-          <Tree
-            v-bind="slotProps.componentProps"
-            :tree-data="permissions"
-            multiple
-            bordered
-            :default-expanded-level="2"
-            :get-node-class="getNodeClass"
-            value-field="key"
-            label-field="title"
-            :show-icon="false"
-          />
-        </Spin>
-      </template>
-    </Form>
+  <Drawer :title="$t('common.create')">
+    <Form />
   </Drawer>
 </template>
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

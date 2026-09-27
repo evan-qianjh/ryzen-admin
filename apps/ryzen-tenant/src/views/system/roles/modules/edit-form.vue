@@ -1,23 +1,24 @@
 <script lang="ts" setup>
-import type {DataNode} from 'ant-design-vue/es/tree';
+import type { DataNode } from 'ant-design-vue/es/tree';
 
-import type {Recordable} from '@vben/types';
+import type { Recordable } from '@vben/types';
 
-import type {SystemRoleApi} from '#/api/system/role';
+import type { SystemPermissionApi } from '#/api';
+import type { SystemRoleApi } from '#/api/system/role';
 
-import {computed, nextTick, ref} from 'vue';
+import { nextTick, ref } from 'vue';
 
-import {Tree, useVbenDrawer} from '@vben/common-ui';
+import { Tree, useVbenDrawer } from '@vben/common-ui';
 
-import {Spin} from 'ant-design-vue';
+import { Spin } from 'ant-design-vue';
 
-import {useVbenForm} from '#/adapter/form';
-import {getPermissions, type SystemPermissionApi} from '#/api';
-import {patchRole} from '#/api/system/role';
-import {getRolePermissions} from '#/api/system/role-permission';
-import {$t} from '#/locales';
+import { useVbenForm } from '#/adapter/form';
+import { getPermissions } from '#/api';
+import { patchRole } from '#/api/system/role';
+import { getRolePermissions } from '#/api/system/role-permission';
+import { $t } from '#/locales';
 
-import {useEditFormSchema} from '../data';
+import { useEditFormSchema } from '../data';
 
 const emits = defineEmits(['success']);
 
@@ -30,8 +31,6 @@ const [Form, formApi] = useVbenForm({
 
 const permissions = ref<DataNode[]>([]);
 const loadingPermissions = ref(false);
-
-
 
 const id = ref();
 const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.GetRolesRes>({
@@ -83,7 +82,6 @@ const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.GetRolesRes>({
 
 defineExpose({ drawerApi });
 
-
 function buildPermissionTree(
   permissions: SystemPermissionApi.GetPermissionRes[],
 ): DataNode[] {
@@ -122,7 +120,7 @@ function buildPermissionTree(
 async function loadPermissions() {
   loadingPermissions.value = true;
   try {
-    const res =  await getPermissions({enabled: true});
+    const res = await getPermissions({ enabled: true });
 
     // 初始化权限
     permissions.value = buildPermissionTree(res);
@@ -130,10 +128,6 @@ async function loadPermissions() {
     loadingPermissions.value = false;
   }
 }
-
-const getDrawerTitle = computed(() => {
-  return $t('common.edit', $t('system.role.title'));
-});
 
 function getNodeClass(node: Recordable<any>) {
   const classes: string[] = [];
@@ -145,7 +139,7 @@ function getNodeClass(node: Recordable<any>) {
 }
 </script>
 <template>
-  <Drawer :title="getDrawerTitle">
+  <Drawer :title="$t('common.edit')">
     <Form>
       <template #permissionIds="slotProps">
         <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">

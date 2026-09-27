@@ -1,8 +1,8 @@
-import { requestClient } from "#/api/request";
+import { requestClient } from '#/api/request';
 
 export namespace SystemAccountApi {
   export interface OffsetPageRes {
-    records: GetAccountsReq [],
+    records: GetAccountsReq[];
     index: number;
     size: number;
     pages: number;
@@ -41,7 +41,7 @@ export namespace SystemAccountApi {
   export interface PatchAccountReq {
     username?: string;
     nickname?: string;
-    enabled?: string;
+    enabled?: boolean;
   }
 
   export interface PutAccountPasswordRes {
@@ -53,18 +53,21 @@ export namespace SystemAccountApi {
 
 export async function getAccounts(req: SystemAccountApi.GetAccountsReq) {
   return await requestClient.get<SystemAccountApi.OffsetPageRes>(
-    '/tenant/accounts', { params: req },
-  )
+    '/tenant/accounts',
+    { params: req },
+  );
 }
 
 export async function postAccount(req: SystemAccountApi.PostAccountReq) {
-  return await requestClient.post<SystemAccountApi.PostAccountRes> (
-    '/tenant/account', req
-  )
+  return await requestClient.post<SystemAccountApi.PostAccountRes>(
+    '/tenant/account',
+    req,
+  );
 }
 
-export async function patchAccount(id: string, req: SystemAccountApi.PatchAccountReq) {
-  return await requestClient.patch(
-    '/tenant/account/' + id, req
-  )
+export async function patchAccount(
+  id: string,
+  req: SystemAccountApi.PatchAccountReq,
+) {
+  return await requestClient.patch(`/tenant/account/${id}`, req);
 }
