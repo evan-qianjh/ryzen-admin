@@ -96,7 +96,10 @@ function setupAccessGuard(router: Router) {
     const userRoles = userInfo.roles ?? [];
 
     // 当前登录用户拥有的权限标识列表
-    const permissions = accessStore.accessCodes || (await authStore.fetchAccessCodes()) ;
+    // 注意:accessCodes 会持久化到 localStorage,这里不能用 `||` 短路读缓存,
+    // 否则 F5 刷新时会一直使用旧的权限码而跳过重新请求;
+    // 且空数组 [] 也是 truthy,权限被清空时同样会误判。fetchAccessCodes 内部已 setAccessCodes。
+    const permissions = await authStore.fetchAccessCodes();
 
     // 生成菜单和路由
     const { accessibleMenus, accessibleRoutes } = await generateAccess({
