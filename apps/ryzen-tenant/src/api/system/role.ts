@@ -22,6 +22,7 @@ export namespace SystemRoleApi {
   export interface PostRoleReq {
     title?: string;
     enabled?: boolean;
+    permissionIds?: string[];
   }
 
   //

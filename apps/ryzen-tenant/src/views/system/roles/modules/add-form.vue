@@ -7,7 +7,9 @@ import type {SystemRoleApi} from '#/api/system/role';
 
 import {computed, nextTick, ref} from 'vue';
 
-import {useVbenDrawer} from '@vben/common-ui';
+import {Tree, useVbenDrawer} from '@vben/common-ui';
+
+import {Spin} from 'ant-design-vue';
 
 import {useVbenForm} from '#/adapter/form';
 import {getPermissions, type SystemPermissionApi} from '#/api';
@@ -137,26 +139,21 @@ function getNodeClass(node: Recordable<any>) {
 <template>
   <Drawer :title="getDrawerTitle">
     <Form>
-<!--      <template #permissions="slotProps">-->
-<!--        <Spin :spinning="loadingPermissions" :classes="{ root: 'w-full' }">-->
-<!--          <Tree-->
-<!--            :tree-data="permissions"-->
-<!--            multiple-->
-<!--            bordered-->
-<!--            :default-expanded-level="2"-->
-<!--            :get-node-class="getNodeClass"-->
-<!--            v-bind="slotProps.componentProps"-->
-<!--            value-field="id"-->
-<!--            label-field="meta.title"-->
-<!--            icon-field="meta.icon"-->
-<!--          >-->
-<!--            <template #node="{ value }">-->
-<!--              <IconifyIcon v-if="value.meta.icon" :icon="value.meta.icon" />-->
-<!--              {{ $t(value.meta.title) }}-->
-<!--            </template>-->
-<!--          </Tree>-->
-<!--        </Spin>-->
-<!--      </template>-->
+      <template #permissionIds="slotProps">
+        <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">
+          <Tree
+            v-bind="slotProps.componentProps"
+            :tree-data="permissions"
+            multiple
+            bordered
+            :default-expanded-level="2"
+            :get-node-class="getNodeClass"
+            value-field="key"
+            label-field="title"
+            :show-icon="false"
+          />
+        </Spin>
+      </template>
     </Form>
   </Drawer>
 </template>
