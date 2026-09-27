@@ -111,7 +111,7 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
     {
       field: 'title',
       title: $t('common.name'),
-      width: 200,
+      // width: 200,
     },
     {
       cellRender: {
@@ -126,6 +126,7 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
     },
     {
       field: 'createdTime',
+      formatter: 'formatDateTime',
       title: $t('common.createdTime'),
       width: 200,
     },
@@ -147,7 +148,7 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
       field: 'operation',
       fixed: 'right',
       title: $t('common.operation'),
-      // width: 130,
+      width: 200,
     },
   ];
 }
