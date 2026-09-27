@@ -14,7 +14,7 @@ import {Spin} from 'ant-design-vue';
 import {useVbenForm} from '#/adapter/form';
 import {getPermissions, type SystemPermissionApi} from '#/api';
 import {patchRole} from '#/api/system/role';
-import {getRolePermissions} from "#/api/system/role-permission";
+import {getRolePermissions} from '#/api/system/role-permission';
 import {$t} from '#/locales';
 
 import {useEditFormSchema} from '../data';
@@ -70,6 +70,12 @@ const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.GetRolesRes>({
       await nextTick();
       if (data) {
         formApi.setValues(data);
+        // 回显已分配权限：Tree 的勾选状态由表单值 modelValue 驱动，直接写入即可
+        const rolePermissions = await getRolePermissions({ roleId: data.id });
+        await formApi.setFieldValue(
+          'permissionIds',
+          rolePermissions.map((rp) => rp.permissionId),
+        );
       }
     }
   },
@@ -120,10 +126,6 @@ async function loadPermissions() {
 
     // 初始化权限
     permissions.value = buildPermissionTree(res);
-
-    // TODO 回显已分配权限
-    const rolePermissions = await getRolePermissions({roleId: id.value})
-
   } finally {
     loadingPermissions.value = false;
   }
