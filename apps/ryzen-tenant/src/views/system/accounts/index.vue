@@ -97,6 +97,10 @@ function onActionClick(e: OnActionClickParams<SystemAccountApi.GetAccountsRes>) 
       onEdit(e.row);
       break;
     }
+    case 'role': {
+      // onRole(e.row);
+      break;
+    }
   }
 }
 
@@ -146,12 +150,12 @@ async function onStatusChange(
   }
 }
 
-function onEdit(row: SystemAccountApi.GetAccountsRes) {
-  editFormDrawerApi.setData(row).open();
-}
-
 function onRefresh() {
   gridApi.query();
+}
+
+function onEdit(row: SystemAccountApi.GetAccountsRes) {
+  editFormDrawerApi.setData(row).open();
 }
 
 function onCreate() {
