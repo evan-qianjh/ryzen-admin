@@ -2,6 +2,8 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn, VxeTableGridColumns } from '#/adapter/vxe-table';
 import type { SystemRoleApi } from '#/api';
 
+import { useAccess } from '@vben/access';
+
 import { $t } from '#/locales';
 
 // 新增表单
@@ -65,6 +67,8 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
   onActionClick: OnActionClickFn<T>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridColumns {
+  // useColumns 在 index.vue 的 setup 中调用，此时路由守卫已将 accessCodes 写入 store，可安全判断权限
+  const { hasAccessByCodes } = useAccess();
   return [
     {
       field: 'id',
@@ -79,7 +83,7 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
     {
       cellRender: {
         attrs: { beforeChange: onStatusChange },
-        name: onStatusChange ? 'CellSwitch' : 'CellTag',
+        name: onStatusChange && hasAccessByCodes(['/system/roles:enabled']) ? 'CellSwitch' : 'CellTag',
         // enabled 字段为 boolean 类型，覆盖渲染器默认的 1/0 选中值
         props: { checkedValue: true, unCheckedValue: false },
       },
