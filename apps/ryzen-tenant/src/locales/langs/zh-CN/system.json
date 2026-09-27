@@ -3,5 +3,10 @@
     "title": "角色",
     "list": "列表",
     "setPermissions": "菜单权限"
+  },
+  "account": {
+    "username": "用户名",
+    "nickname": "昵称",
+    "email": "邮箱"
   }
 }

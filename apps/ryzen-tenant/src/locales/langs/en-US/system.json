@@ -3,5 +3,10 @@
     "title": "Role",
     "list": "List",
     "setPermissions": "Menu Permissions"
+  },
+  "account": {
+    "username": "Username",
+    "nickname": "Nickname",
+    "email": "Email"
   }
 }

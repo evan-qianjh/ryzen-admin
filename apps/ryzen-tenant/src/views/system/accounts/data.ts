@@ -1,6 +1,6 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn, VxeTableGridColumns } from '#/adapter/vxe-table';
-import type { SystemRoleApi } from '#/api';
+import type { SystemAccountApi } from '#/api';
 
 import { useAccess } from '@vben/access';
 
@@ -11,9 +11,20 @@ export function useAddFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'title',
-      label: $t('system.role.title'),
+      fieldName: 'username',
+      label: $t('system.account.username'),
       rules: 'required',
+    },
+    {
+      component: 'Input',
+      fieldName: 'nickname',
+      label: $t('system.account.nickname'),
+      rules: 'required',
+    },
+    {
+      component: 'Input',
+      fieldName: 'email',
+      label: $t('system.account.email'),
     },
     {
       component: 'RadioGroup',
@@ -28,13 +39,6 @@ export function useAddFormSchema(): VbenFormSchema[] {
       defaultValue: true,
       fieldName: 'enabled',
       label: $t('common.enabled'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'permissionIds',
-      formItemClass: 'items-start',
-      label: $t('system.role.setPermissions'),
-      modelPropName: 'modelValue',
     },
   ];
 }
@@ -45,7 +49,7 @@ export function useEditFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'title',
-      label: $t('system.role.title'),
+      label: $t('system.account.title'),
       rules: 'required',
     },
     {
@@ -62,13 +66,6 @@ export function useEditFormSchema(): VbenFormSchema[] {
       fieldName: 'enabled',
       label: $t('common.enabled'),
     },
-    {
-      component: 'Input',
-      fieldName: 'permissionIds',
-      formItemClass: 'items-start',
-      label: $t('system.role.setPermissions'),
-      modelPropName: 'modelValue',
-    },
   ];
 }
 
@@ -77,16 +74,16 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'title',
-      label: $t('common.name'),
+      fieldName: 'username',
+      label: $t('system.account.username'),
     },
     {
       component: 'Select',
       componentProps: {
         allowClear: true,
         options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
+          { label: $t('common.enabled'), value: true },
+          { label: $t('common.disabled'), value: false },
         ],
       },
       fieldName: 'enabled',
@@ -96,7 +93,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
 }
 
 // 表格内容
-export function useColumns<T = SystemRoleApi.GetRolesRes>(
+export function useColumns<T = SystemAccountApi.GetAccountsRes>(
   onActionClick: OnActionClickFn<T>,
   onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridColumns {
@@ -109,15 +106,24 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
       width: 200,
     },
     {
-      field: 'title',
-      title: $t('common.name'),
+      field: 'username',
+      title: $t('system.account.username'),
+      // width: 200,
+    },
+    {
+      field: 'nickname',
+      title: $t('system.account.nickname'),
+      // width: 200,
+    },
+    {
+      field: 'email',
+      title: $t('system.account.email'),
       // width: 200,
     },
     {
       cellRender: {
         attrs: { beforeChange: onStatusChange },
-        name: onStatusChange && hasAccessByCodes(['/system/roles:enabled']) ? 'CellSwitch' : 'CellTag',
-        // enabled 字段为 boolean 类型，覆盖渲染器默认的 1/0 选中值
+        name: onStatusChange && hasAccessByCodes(['/system/accounts:enabled']) ? 'CellSwitch' : 'CellTag',
         props: { checkedValue: true, unCheckedValue: false },
       },
       field: 'enabled',
@@ -135,14 +141,12 @@ export function useColumns<T = SystemRoleApi.GetRolesRes>(
       cellRender: {
         attrs: {
           nameField: 'title',
-          nameTitle: $t('system.role.title'),
+          nameTitle: $t('system.account.title'),
           onClick: onActionClick,
         },
         name: 'CellOperation',
-        // 按钮级细粒度控制：show 为 false（或函数返回 false）的按钮会被渲染器过滤掉
         options: [
-          { code: 'edit', show: hasAccessByCodes(['/system/roles:edit']) },
-          { code: 'delete', show: hasAccessByCodes(['/system/roles:delete']) },
+          { code: 'edit', show: hasAccessByCodes(['/system/accounts:edit']) },
         ],
       },
       field: 'operation',

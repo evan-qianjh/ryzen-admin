@@ -13,6 +13,16 @@ const routes: RouteRecordRaw[] = [
     path: '/system',
     children: [
       {
+        name: 'Accounts',
+        path: 'accounts',
+        component: () => import('#/views/system/accounts/index.vue'),
+        meta: {
+          icon: 'mdi:user',
+          title: $t('page.system.accounts'),
+          permissions: ['/system/accounts:view'],
+        },
+      },
+      {
         name: 'Roles',
         path: 'roles',
         component: () => import('#/views/system/roles/index.vue'),

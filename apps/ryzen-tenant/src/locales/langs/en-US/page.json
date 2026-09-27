@@ -14,6 +14,7 @@
   },
   "system": {
     "title": "System",
-    "roles": "Roles"
+    "roles": "Roles",
+    "accounts": "Accounts"
   }
 }
