@@ -1,6 +1,7 @@
 {
   "role": {
     "title": "角色",
-    "list": "列表"
+    "list": "列表",
+    "setPermissions": "菜单权限"
   }
 }

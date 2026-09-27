@@ -29,13 +29,13 @@ export function useFormSchema(): VbenFormSchema[] {
       fieldName: 'enabled',
       label: $t('common.enabled'),
     },
-    // {
-    //   component: 'Input',
-    //   fieldName: 'permissions',
-    //   formItemClass: 'items-start',
-    //   label: $t('system.role.setPermissions'),
-    //   modelPropName: 'modelValue',
-    // },
+    {
+      component: 'Input',
+      fieldName: 'permissions',
+      formItemClass: 'items-start',
+      label: $t('system.role.setPermissions'),
+      modelPropName: 'modelValue',
+    },
   ];
 }
 

@@ -1,6 +1,7 @@
 {
   "role": {
     "title": "Role",
-    "list": "List"
+    "list": "List",
+    "setPermissions": "Menu Permissions"
   }
 }

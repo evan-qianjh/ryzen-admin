@@ -1,23 +1,20 @@
 <script lang="ts" setup>
-// import type { DataNode } from 'ant-design-vue/dist/tree';
+import type {DataNode} from 'ant-design-vue/es/tree';
 
-// import type { Recordable } from '@vben/types';
+import type {Recordable} from '@vben/types';
 
-import type { SystemRoleApi} from '#/api/system/role';
+import type {SystemRoleApi} from '#/api/system/role';
 
-import { computed, nextTick, ref } from 'vue';
+import {computed, nextTick, ref} from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
-// import { IconifyIcon } from '@vben/icons';
-//
-// import { Spin } from 'ant-design-vue';
+import {useVbenDrawer} from '@vben/common-ui';
 
-import { useVbenForm } from '#/adapter/form';
-// import { getMenuList } from '#/api/system/menu';
-import { postRole } from '#/api/system/role';
-import { $t } from '#/locales';
+import {useVbenForm} from '#/adapter/form';
+import {getPermissions, type SystemPermissionApi} from '#/api';
+import {postRole} from '#/api/system/role';
+import {$t} from '#/locales';
 
-import { useFormSchema } from '../data';
+import {useFormSchema} from '../data';
 
 const emits = defineEmits(['success']);
 
@@ -28,8 +25,11 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-// const permissions = ref<DataNode[]>([]);
-// const loadingPermissions = ref(false);
+const permissions = ref<DataNode[]>([]);
+const loadingPermissions = ref(false);
+
+
+
 
 const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.PostRoleReq>({
   async onConfirm() {
@@ -58,9 +58,9 @@ const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.PostRoleReq>({
         formData.value = undefined;
       }
 
-      // if (permissions.value.length === 0) {
-      //   await loadPermissions();
-      // }
+      if (permissions.value.length === 0) {
+        await loadPermissions();
+      }
       // Wait for Vue to flush DOM updates (form fields mounted)
       await nextTick();
       if (data) {
@@ -72,28 +72,67 @@ const [Drawer, drawerApi] = useVbenDrawer<null | SystemRoleApi.PostRoleReq>({
 
 defineExpose({ drawerApi });
 
-// async function loadPermissions() {
-//   loadingPermissions.value = true;
-//   try {
-//     const res = await getMenuList();
-//     permissions.value = res as unknown as DataNode[];
-//   } finally {
-//     loadingPermissions.value = false;
-//   }
-// }
+
+function buildPermissionTree(
+  permissions: SystemPermissionApi.GetPermissionRes[],
+): DataNode[] {
+  const nodeMap = new Map<string, DataNode>();
+
+  // 先创建所有节点
+  permissions.forEach((permission) => {
+    nodeMap.set(permission.id, {
+      key: permission.id,
+      title: permission.title,
+    });
+  });
+
+  const tree: DataNode[] = [];
+
+  // 再建立父子关系
+  permissions.forEach((permission) => {
+    const node = nodeMap.get(permission.id)!;
+
+    if (permission.parentId === null) {
+      tree.push(node);
+      return;
+    }
+
+    if (permission.parentId != null) {
+      const parent = nodeMap.get(permission.parentId);
+      if (parent) {
+        parent.children ??= [];
+        parent.children.push(node);
+      }
+    }
+  });
+  return tree;
+}
+
+async function loadPermissions() {
+  loadingPermissions.value = true;
+  try {
+    // const res = await getAllMenusApi();
+    const res =  await getPermissions({enabled: true});
+
+    // permissions.value = res as unknown as DataNode[];
+    permissions.value = buildPermissionTree(res);
+  } finally {
+    loadingPermissions.value = false;
+  }
+}
 
 const getDrawerTitle = computed(() => {
   return $t('common.create', $t('system.role.title'));
 });
 
-// function getNodeClass(node: Recordable<any>) {
-//   const classes: string[] = [];
-//   if (node.value?.type === 'button') {
-//     classes.push('inline-flex');
-//   }
-//
-//   return classes.join(' ');
-// }
+function getNodeClass(node: Recordable<any>) {
+  const classes: string[] = [];
+  if (node.value?.type === 'button') {
+    classes.push('inline-flex');
+  }
+
+  return classes.join(' ');
+}
 </script>
 <template>
   <Drawer :title="getDrawerTitle">
