@@ -25,7 +25,7 @@ const [Drawer, drawerApi] =
     async onConfirm() {
       const { valid } = await formApi.validate();
       if (!valid) return;
-      const values = await formApi.getValues();
+      const values = await formApi.getValues<SystemAccountApi.PostAccountReq>();
       drawerApi.lock();
       postAccount(values)
         .then(() => {
@@ -42,11 +42,7 @@ const [Drawer, drawerApi] =
         const data = drawerApi.getData();
         formApi.reset();
 
-        if (data) {
-          formData.value = data;
-        } else {
-          formData.value = undefined;
-        }
+        formData.value = data ?? undefined;
 
         // Wait for Vue to flush DOM updates (form fields mounted)
         await nextTick();

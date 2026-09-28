@@ -32,6 +32,7 @@ minimumReleaseAge: 0
 overrides:
   '@ast-grep/napi': 'catalog:'
   '@ctrl/tinycolor': 'catalog:'
+  '@vue/compiler-sfc': 'catalog:'
   clsx: 'catalog:'
   pinia: 'catalog:'
   vue: 'catalog:'
@@ -93,6 +94,9 @@ catalog:
   '@vite-pwa/vitepress': ^1.1.0
   '@vitejs/plugin-vue': ^6.0.9
   '@vitejs/plugin-vue-jsx': ^5.1.6
+  # 与 catalog 中 vue 的精确版本保持一致，避免 vue-router 因 compiler-sfc 浮动
+  # 版本(^3.5.22, 来自 @vue-macros/common)解析出多个 peer 变体导致类型冲突
+  '@vue/compiler-sfc': 3.5.41
   '@vue/shared': ^3.5.40
   '@vue/test-utils': ^2.4.11
   '@vueuse/core': ^14.4.0
