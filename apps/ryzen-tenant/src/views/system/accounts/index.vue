@@ -7,6 +7,7 @@ import type {
   OnActionClickParams,
   VxeTableGridOptions,
 } from '#/adapter/vxe-table';
+import type { SystemAccountApi } from '#/api';
 
 import { useAccess } from '@vben/access';
 import { Page, useVbenDrawer } from '@vben/common-ui';
@@ -15,13 +16,14 @@ import { Plus } from '@vben/icons';
 import { Button, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { type SystemAccountApi, getAccounts, postAccount, patchAccount} from '#/api';
+import { getAccounts, patchAccount } from '#/api';
 import { $t } from '#/locales';
 import { createDateRangeCodec } from '#/utils/date-range-codec';
 
 import { useColumns, useGridFormSchema } from './data';
 import AddForm from './modules/add-form.vue';
 import EditForm from './modules/edit-form.vue';
+import RoleForm from './modules/role-form.vue';
 
 interface SearchFormValues extends Record<string, unknown> {
   createTime?: [Dayjs, Dayjs];
@@ -47,7 +49,13 @@ const [AddFormDrawer, addFormDrawerApi] = useVbenDrawer({
 const [EditFormDrawer, editFormDrawerApi] = useVbenDrawer({
   connectedComponent: EditForm,
   destroyOnClose: true,
-})
+});
+
+/* 角色表单 */
+const [RoleFormDrawer, roleFormDrawerApi] = useVbenDrawer({
+  connectedComponent: RoleForm,
+  destroyOnClose: true,
+});
 
 /* 表格 */
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -71,7 +79,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           return await getAccounts({
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
-            ...formValues
+            ...formValues,
           });
         },
       },
@@ -91,14 +99,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 /* action点击 */
-function onActionClick(e: OnActionClickParams<SystemAccountApi.GetAccountsRes>) {
+function onActionClick(
+  e: OnActionClickParams<SystemAccountApi.GetAccountsRes>,
+) {
   switch (e.code) {
     case 'edit': {
       onEdit(e.row);
       break;
     }
     case 'role': {
-      // onRole(e.row);
+      onRole(e.row);
       break;
     }
   }
@@ -158,6 +168,10 @@ function onEdit(row: SystemAccountApi.GetAccountsRes) {
   editFormDrawerApi.setData(row).open();
 }
 
+function onRole(row: SystemAccountApi.GetAccountsRes) {
+  roleFormDrawerApi.setData(row).open();
+}
+
 function onCreate() {
   addFormDrawerApi.setData(null).open();
 }
@@ -168,10 +182,16 @@ function onCreate() {
     <AddFormDrawer @success="onRefresh" />
     <!--  编辑表单  -->
     <EditFormDrawer @success="onRefresh" />
+    <!--  角色表单  -->
+    <RoleFormDrawer @success="onRefresh" />
     <!--  列表  -->
     <Grid>
       <template #toolbar-tools>
-        <Button v-if="hasAccessByCodes(['/system/accounts:add'])" type="primary" @click="onCreate">
+        <Button
+          v-if="hasAccessByCodes(['/system/accounts:add'])"
+          type="primary"
+          @click="onCreate"
+        >
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create', [$t('page.system.accounts')]) }}
         </Button>
