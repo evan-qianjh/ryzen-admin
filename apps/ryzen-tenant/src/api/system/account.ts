@@ -44,6 +44,10 @@ export namespace SystemAccountApi {
     enabled?: boolean;
   }
 
+  export interface PutAccountRolesReq {
+    roleIds: string[];
+  }
+
   export interface PutAccountPasswordRes {
     username: string;
     nickname: string;
@@ -70,4 +74,11 @@ export async function patchAccount(
   req: SystemAccountApi.PatchAccountReq,
 ) {
   return await requestClient.patch(`/tenant/account/${id}`, req);
+}
+
+export async function putAccountRoles(
+  id: string,
+  req: SystemAccountApi.PutAccountRolesReq,
+) {
+  return await requestClient.put(`/tenant/account/${id}/roles`, req);
 }

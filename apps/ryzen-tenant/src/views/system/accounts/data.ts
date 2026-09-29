@@ -73,6 +73,22 @@ export function useEditFormSchema(): VbenFormSchema[] {
   ];
 }
 
+// 分配角色表单
+export function useRoleFormSchema(): VbenFormSchema[] {
+  return [
+    {
+      component: 'CheckboxGroup',
+      componentProps: {
+        // 选项在 role-form.vue 打开时通过 formApi.updateSchema 填充
+        options: [],
+      },
+      defaultValue: [],
+      fieldName: 'roleIds',
+      label: $t('system.role.title'),
+    },
+  ];
+}
+
 // 表格搜索表单
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
