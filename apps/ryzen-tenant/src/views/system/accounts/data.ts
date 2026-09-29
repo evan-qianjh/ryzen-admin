@@ -154,6 +154,11 @@ export function useColumns<T = SystemAccountApi.GetAccountsRes>(
         name: 'CellOperation',
         options: [
           { code: 'edit', show: hasAccessByCodes(['/system/accounts:edit']) },
+          {
+            code: 'role',
+            show: hasAccessByCodes(['/system/accounts:role']),
+            text: $t('system.account.role'),
+          },
         ],
       },
       field: 'operation',

@@ -63,7 +63,7 @@ const [Drawer, drawerApi] =
 defineExpose({ drawerApi });
 </script>
 <template>
-  <Drawer :title="$t('common.edit')">
+  <Drawer :title="$t('system.account.role')">
     <Form />
   </Drawer>
 </template>

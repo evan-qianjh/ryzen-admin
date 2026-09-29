@@ -7,6 +7,7 @@
   "account": {
     "username": "Username",
     "nickname": "Nickname",
-    "email": "Email"
+    "email": "Email",
+    "role": "Assign Role"
   }
 }

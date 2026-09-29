@@ -1,11 +1,8 @@
-import {requestClient} from '#/api/request';
+import { requestClient } from '#/api/request';
 
 export namespace SystemRoleApi {
   //
   export interface GetRolesReq {
-    // TODO delete
-    // page?: number;
-    // pageSize?: number;
     enabled?: boolean;
     endTime?: string;
     startTime?: string;
@@ -15,7 +12,7 @@ export namespace SystemRoleApi {
     id: string;
     title: string;
     enabled: boolean;
-    createdTime: number
+    createdTime: number;
   }
 
   //
@@ -37,9 +34,9 @@ export namespace SystemRoleApi {
  * @param req
  */
 export async function getRoles(req: SystemRoleApi.GetRolesReq) {
-  return await requestClient.get<SystemRoleApi.GetRolesRes[]>(
-    '/tenant/roles', {params: req}
-  )
+  return await requestClient.get<SystemRoleApi.GetRolesRes[]>('/tenant/roles', {
+    params: req,
+  });
 }
 
 /**
@@ -47,9 +44,7 @@ export async function getRoles(req: SystemRoleApi.GetRolesReq) {
  * @param req
  */
 export async function postRole(req: SystemRoleApi.PostRoleReq) {
-  return await requestClient.post(
-    '/tenant/role', req
-  );
+  return await requestClient.post('/tenant/role', req);
 }
 
 /**
@@ -58,9 +53,7 @@ export async function postRole(req: SystemRoleApi.PostRoleReq) {
  * @param req
  */
 export async function patchRole(id: string, req: SystemRoleApi.PatchRoleReq) {
-  return await requestClient.patch(
-    '/tenant/role/' + id, req
-  )
+  return await requestClient.patch(`/tenant/role/${id}`, req);
 }
 
 /**
@@ -68,8 +61,5 @@ export async function patchRole(id: string, req: SystemRoleApi.PatchRoleReq) {
  * @param id
  */
 export async function deleteRole(id: string) {
-  return await requestClient.delete(
-    '/tenant/role/' + id
-  )
+  return await requestClient.delete(`/tenant/role/${id}`);
 }
-
