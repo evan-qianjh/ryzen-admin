@@ -27,6 +27,7 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
+    "build:ryzen-tenant": "pnpm run build --filter=@vben/ryzen-tenant",
     "build:analyze": "turbo build:analyze",
     "build:antd": "pnpm run build --filter=@vben/web-antd",
     "build:docker": "./scripts/deploy/build-local-docker-image.sh",
@@ -44,7 +45,7 @@
     "clean": "node ./scripts/clean.mjs",
     "commit": "czg",
     "dev": "turbo-run dev",
-    "dev:ryzen-admin-tenant": "pnpm -F @vben/ryzen-admin-tenant run dev",
+    "dev:ryzen-tenant": "pnpm -F @vben/ryzen-tenant run dev",
     "dev:antd": "pnpm -F @vben/web-antd run dev",
     "dev:antdv-next": "pnpm -F @vben/web-antdv-next run dev",
     "dev:docs": "pnpm -F @vben/docs run dev",
